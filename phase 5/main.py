@@ -47,11 +47,11 @@ def main():
     ###################### Search 
     search=False
     if search_query!=None and search_query!='':
-        query='(SELECT distinct on (C1."clothing_name") C1."clothing_name",C2."clothing_price",C2."clothing_discount", "clothing_photos" from "Clothing/Accessory item name" as C2,"Clothing/Accessory item" as C1,"Photos Clothing" as Ph where C2."clothing_name"=C1."clothing_name" and C1."clothing_RefNb"=Ph."clothing_RefNb" and  "main_type" like'+"'%"+search_query+"%'"+'or "sub_type" like'+"'%"+search_query+"%'"+'or "clothing_description" like'+"'%"+search_query+"%'"+' or C1."clothing_name" like'+"'%"+search_query+"%'"+ ")" 
+        query='(SELECT distinct on (C1."clothing_name") C1."clothing_name",C2."clothing_price",C2."clothing_discount", "clothing_photos" from "Clothing/Accessory item name" as C2,"Clothing/Accessory item" as C1,"Photos Clothing" as Ph where C2."clothing_name"=C1."clothing_name" and C1."clothing_RefNb"=Ph."clothing_RefNb" and  ("main_type" like'+"'%"+search_query+"%'"+'or "sub_type" like'+"'%"+search_query+"%'"+'or "clothing_description" like'+"'%"+search_query+"%'"+' or C1."clothing_name" like'+"'%"+search_query+"%'"+ "))" 
         print(query)
         cursor.execute(query)
         search_results_cloth=cursor.fetchall()
-        query='(SELECT distinct on ("cosmetic_name") "cosmetic_name","cosmetic_price","cosmetic_discount", "cosmetic_photos" from "Cosmetic item" as i,"Photos Cosmetic" as p where i."cosmetic_RefNb"=p."cosmetic_RefNb" and "cosmetic_name" like'+"'%"+search_query+"%'"+'or "cosmetic_description" like'+"'%"+search_query+"%')"
+        query='(SELECT distinct on ("cosmetic_name") "cosmetic_name","cosmetic_price","cosmetic_discount", "cosmetic_photos" from "Cosmetic item" as i,"Photos Cosmetic" as p where i."cosmetic_RefNb"=p."cosmetic_RefNb" and ("cosmetic_name" like'+"'%"+search_query+"%'"+'or "cosmetic_description" like'+"'%"+search_query+"%'))"
         print(query)
         cursor.execute(query)
         search_results_cos=cursor.fetchall()
