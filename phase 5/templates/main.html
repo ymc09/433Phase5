@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="static/mainstyle.css">
+    </head>
+    
+    
+    <header>
+        
+        <a href="/"><img src="static/logo.png" width=450 height="68"></a>
+        <a href="/profile"><button class="profileButton">&#128100;</button></a> 
+        <a href="/cart"><button class="cartButton">&#128722;</button></a>
+
+        <form action="" method="POST">
+            
+            <input type="text" name="search_bar" placeholder="Search" ><br>
+              
+        
+            <input type="submit" value="🔍︎">
+      </form> 
+    <div class="topnav">
+        <a href="/gp">Coats</a>
+        <a href="/patients">Jackets</a>
+        <a href="/pharmacy">Blazers</a>
+        
+      </div>
+      {% if not search%}
+      <img src="static/sale.jpeg" width=1500 height="625">
+      {% endif %}
+    </header>
+    <body>
+        {%if search and not search_results_cloth and not search_results_cos%} <p>No results found</p> {%endif%}
+        <ul>
+            {% for row in search_results_cloth%}
+            <li>
+                <p>
+                    <img src={{row[3]}} width="200" height="300">
+                        <p>{% if row[2]!=0 %}{{row[2]}}% off{% endif %}</p>
+                            <p>{{row[0]}}</p>
+                            <p>${{row[1]}} {% if row[2]!=0 %}<s>{{row[4]}}</s>{% endif %}</p>
+                </p>
+            </li>
+            {% endfor %}
+        </ul>
+        <ul>
+            {% for row in search_results_cos%}
+            <li>
+                <img src={{row[3]}} width="200" height="300">
+                        <p>{% if row[2]!=0 %}{{row[2]}}% off{% endif %}</p>
+                            <p>{{row[0]}}</p>
+                            <p>${{row[1]}} {% if row[2]!=0 %}<s>{{row[4]}}</s>{% endif %}</p>
+            </li>
+            {% endfor %}
+        </ul>
+        {% if not search %}
+        <table border=15 cellpadding=15 cellspacing=10>
+            <p>Offers</p>
+            <tr>
+                
+                    {% for row in discounted_items1%}
+                    <td>
+                        <img src={{row[3]}} width="100" height="100">
+                        <p>{% if row[2]!=0 %}{{row[2]}}% off{% endif %}</p>
+                            <p>{{row[0]}}</p>
+                            <p>${{row[1]}} {% if row[2]!=0 %}<s>{{row[4]}}</s>{% endif %}</p>
+                    </td>
+                    {% endfor %}
+                
+            </tr>
+            <tr>
+                {% for row in discounted_items2 %}
+                    <td>
+                        <img src={{row[3]}} width="100" height="100">
+                        <p>{% if row[2]!=0 %}{{row[2]}}% off{% endif %}</p>
+                            <p>{{row[0]}}</p>
+                            <p>${{row[1]}} {% if row[2]!=0 %}<s>{{row[4]}}</s>{% endif %}</p>
+                    </td>
+                {% endfor %}
+            </tr>
+
+        </table>
+        <table border=15 cellpadding=15 cellspacing=10>
+            <p>Best Sellers</p>
+            <tr>
+                    {% for row in best_sellers2%}
+                    <td>
+                        <img src={{row[3]}} width="100" height="100">
+                        <p>{% if row[2]!=0 %}{{row[2]}}% off{% endif %}</p>
+                            <p>{{row[0]}}</p>
+                            <p>${{row[1]}} {% if row[2]!=0 %}<s>{{row[4]}}</s>{% endif %}</p>
+                    </td>
+                    {% endfor %}
+            </tr>
+            <tr>
+                {% for row in best_sellers1 %}
+                <td>
+                    <img src={{row[3]}} width="100" height="100">
+                    <p>{% if row[2]!=0 %}{{row[2]}}% off{% endif %}</p>
+                        <p>{{row[0]}}</p>
+                        <p>${{row[1]}} {% if row[2]!=0 %}<s>{{row[4]}}</s>{% endif %}</p>
+                </td>
+                {% endfor %}
+            </tr>
+
+        </table>
+        {% endif %}
+    </body>
+</html>

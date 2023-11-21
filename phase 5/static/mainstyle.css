@@ -1,0 +1,67 @@
+body {
+    border-top: 60px solid rgb(85, 166, 220); /* Adjust the color and thickness as needed */
+    margin: 0; /* Remove default margin to ensure the border covers the entire width */
+    padding: 0; /* Remove default padding */
+}
+.topnav {
+    background-color: rgb(85, 166, 220); /* Set the background color to blue or your preferred color */
+    overflow: hidden;
+}
+
+.topnav a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.topnav a:hover {
+    background-color: #555; /* Change the background color on hover if desired */
+}
+form {
+    display: flex;
+    margin: 10px;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+}
+
+input[type="submit"] {
+    padding: 10px;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+}
+header{
+    background-color: rgb(190, 230, 238);
+}
+.profileButton{
+    margin-left: 990px;
+    margin-bottom: 0px;
+    border: 2px solid #3498db; /* Border color */
+    color: #3498db; /* Text color */
+    border-radius: 5px; 
+}
+.profileButton:hover {
+    background-color: #3498db; /* Background color on hover */
+    color: #fff; /* Text color on hover */
+  }
+.cartButton{
+    margin-bottom: 0px;
+    border: 2px solid #3498db; /* Border color */
+    color: #3498db; /* Text color */
+    border-radius: 5px; 
+}
+.cartButton:hover {
+    background-color: #3498db; /* Background color on hover */
+    color: #fff; /* Text color on hover */
+  }
