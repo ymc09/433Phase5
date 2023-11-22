@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="static/cart.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      function removefromCart(product_id) {
+      function removefromCart(product_name) {
         $.ajax({
           type: "GET",
-          url: "/cart/removefromcart/" + product_id,
+          url: "/cart/removefromcart/" + product_name,
           success: function (response) {
             window.location.reload();
             // Optionally, update the cart display or take further actions
@@ -39,7 +39,7 @@
         <td>{{ item[3] }}</td>
         <td>{{ item[4] }}</td>
         <td>
-          <button onclick="removefromCart('{{ item[0] }}')">
+          <button onclick="removefromCart('{{ item[1] }}')">
             Remove From Cart
           </button>
         </td>

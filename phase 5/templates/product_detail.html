@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="static/mainstyle.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      function addToCart(product_id) {
+      function addToCart(product_name) {
         $.ajax({
           type: "GET",
-          url: "/cart/addtocart/" + product_id,
+          url: "/cart/addtocart/" + product_name,
           success: function (response) {
             window.location.reload();
             // Optionally, update the cart display or take further actions

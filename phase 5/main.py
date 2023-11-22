@@ -3,16 +3,16 @@ import psycopg2
 import base64
 app = Flask(__name__) #create instance of flask
 conn = psycopg2.connect(
-   database="FOUR3THREE", user='postgres', 
-   password='-----', host='127.0.0.1', port= '5432'
+   database="phase5", user='postgres', 
+   password='vryl', host='127.0.0.1', port= '5432'
 )
-@app.route('/<product_id>')
-def product(product_id):
+@app.route('/<product_name>')
+def product(product_name):
     cursor=conn.cursor()
-    # Find the product with the specified ID
-    cursor.execute('(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb" from "Cosmetic item" where "cosmetic_name"='+"'"+product_id+"')")
+    # Find the product with the specified name
+    cursor.execute('(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb" from "Cosmetic item" where "cosmetic_name"='+"'"+name+"')")
     cosmetics=cursor.fetchall()
-    cursor.execute('(select C1."clothing_name","clothing_price","clothing_description","clothing_RefNb","clothing_discount" from "Clothing/Accessory item" as C1, "Clothing/Accessory item name" as C2 where C1."clothing_name"=C2."clothing_name" and C1."clothing_name"='+"'"+product_id+"') union"+'(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb","cosmetic_discount" from "Cosmetic item" where "cosmetic_name"='+"'"+product_id+"')")
+    cursor.execute('(select C1."clothing_name","clothing_price","clothing_description","clothing_RefNb","clothing_discount" from "Clothing/Accessory item" as C1, "Clothing/Accessory item name" as C2 where C1."clothing_name"=C2."clothing_name" and C1."clothing_name"='+"'"+product_name+"') union"+'(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb","cosmetic_discount" from "Cosmetic item" where "cosmetic_name"='+"'"+product_name+"')")
     product = list(cursor.fetchall()[0])
     product[1]=round(product[1],2)
     size=[]
@@ -97,32 +97,57 @@ cart=[]
 cart.append(([5,'ddd','L',3,1]))
 cart.append(([5,'ddd','L',3,1]))
 cart.append(([5,'ddd','L',3,1]))
-@app.route("/cart/addtocart/<int:product_id>", methods=['POST','GET']) 
-def addToCart(itemRefNo):
+@app.route("/cart/addtocart/<product_name>", methods=['POST','GET']) 
+def addToCart(product_name):
     
         cursor=conn.cursor()
-        query = "SELECT ca.clothing_name, ca.size, cn.clothing_price FROM \"Clothing/Accessory item\" ca JOIN \"Clothing/Accessory item name\" cn ON ca.clothing_name = cn.clothing_name WHERE ca.clothing_RefNb = %s;"
-        cursor.execute(query, (itemRefNo,))
+        query = "SELECT ca.clothing_RefNb ,ca.clothing_name, ca.size, cn.clothing_price FROM \"Clothing/Accessory item\" ca JOIN \"Clothing/Accessory item name\" cn ON ca.clothing_name = cn.clothing_name WHERE ca.clothing_name = %s;"
+        cursor.execute(query, (product_name,))
         row = cursor.fetchone()
 
         if row:
             item = [
-                 itemRefNo,
                  row[0],
                  row[1],
                  row[2],
+                 row[3],
                  1
             ]
 
             for item in cart:
-                if item[0]==itemRefNo:
+                if item[1]==product_name:
                     item[4]+=1
                     return redirect('/cart')
             
             cart.append(item)
             
+        else:
 
-            return redirect('/cart')
+            query = "SELECT cosmetic_RefNb ,cosmetic_name,size,cosmetic_price FROM \"Cosmetic item\" where cosmetic_name = %s;"
+            cursor.execute(query, (product_name,))
+            row = cursor.fetchone()
+
+            if row:
+                item = [
+                    row[0],
+                    row[1],
+                    row[2],
+                    row[3],
+                    1
+                ]
+
+                for item in cart:
+                    if item[1]==name:
+                        item[4]+=1
+                        return redirect('/cart')
+                
+                cart.append(item)
+
+            else:
+                print("Product Not Found!")
+
+
+        return redirect('/cart')
 
 # View cart
 @app.route('/cart')
@@ -131,10 +156,10 @@ def view_cart():
     return render_template('cart.html',cart=cart ,total=total)
 
 # Remove item from cart
-@app.route('/cart/removefromcart/<int:product_id>',methods=['POST','GET'])
-def remove_from_cart(product_id):
+@app.route('/cart/removefromcart/<product_name>',methods=['POST','GET'])
+def remove_from_cart(product_name):
     for item in cart:
-        if item[0]==product_id:
+        if item[1]==product_name:
             cart.remove(item)
             break
 
