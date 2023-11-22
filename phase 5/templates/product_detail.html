@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product[1] }} Details</title>
+    <link rel="stylesheet" href="static/mainstyle.css">
+</head>
+
+
+<header>
+    
+    <a href="/"><img src="static/logo.png" width=450 height="68"></a>
+    <a href="/profile"><button class="profileButton">&#128100;</button></a> 
+    <a href="/cart"><button class="cartButton">&#128722;</button></a>
+
+<div class="topnav">
+    <a href="/gp">Coats</a>
+    <a href="/patients">Jackets</a>
+    <a href="/pharmacy">Blazers</a>
+    
+  </div>
+<body>
+    {% for row in pics%}
+        <img class="product_detail_image" src={{row[1]}} width="200" height="300">
+    {% endfor %}
+    <h1 class="item_name">{{ product[0] }} <button class="add_to_cart">Add to cart</button></h1>
+    <p class="sale-red-box-details">{% if product[4]!=0 %}{{product[4]}}% off{% endif %}</p>
+    <p class="item_specs">Price: ${{ product[1] }}  {% if product[4]!=0 %}<s class="sale-crossed">{{product[5]}}</s>{% endif %}</p>
+    {% if size%}
+    <span class="available_sizes">Available Sizes: </span>
+    <ul class="size-list">
+    {%for row in size%}
+    <li>{{row[0]}}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    
+    <p class="item_specs">{{ product[2] }}</p>
+    
+</body>
+</html>
