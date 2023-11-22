@@ -1,4 +1,4 @@
-from flask import Flask,request, render_template
+from flask import Flask, redirect,request, render_template
 import psycopg2
 import base64
 app = Flask(__name__) #create instance of flask
@@ -85,7 +85,6 @@ def main():
             search_results_cos[i].append(round(search_results_cos[i][1]/(1-search_results_cos[i][2]),2)) # adding original price
             search_results_cos[i][2]=search_results_cos[i][2]*100
         search=True
-<<<<<<< HEAD
         
     
     return render_template("main.html",discounted_items1=discounted_items[:len(discounted_items)//2],
@@ -98,7 +97,7 @@ cart=[]
 cart.append(([5,'ddd','L',3,1]))
 cart.append(([5,'ddd','L',3,1]))
 cart.append(([5,'ddd','L',3,1]))
-@app.route("/cart/addtocart", methods=['POST','GET']) 
+@app.route("/cart/addtocart/<int:product_id>", methods=['POST','GET']) 
 def addToCart(itemRefNo):
     
         cursor=conn.cursor()
@@ -142,7 +141,6 @@ def remove_from_cart(product_id):
     return render_template('cart.html')
 
 
-=======
       ####################### cosmetics ads
     cursor.execute('select distinct on ("cosmetic_name") "cosmetic_name","cosmetic_price","cosmetic_discount","cosmetic_description","cosmetic_photos","Cosmetic item"."cosmetic_RefNb" from "Cosmetic item","Photos Cosmetic" where "Cosmetic item"."cosmetic_RefNb"="Photos Cosmetic"."cosmetic_RefNb" limit 8')
     cosmetics_ad=cursor.fetchall()
@@ -154,6 +152,5 @@ def remove_from_cart(product_id):
     return render_template("main.html",discounted_items=discounted_items,
                            best_sellers=best_sellers,
                            search_results_cloth=search_results_cloth,search_results_cos=search_results_cos,search=search,cosmetics_ad=cosmetics_ad)
->>>>>>> aaedbdde9f6688db476a3078a5dcb7b16aaa5858
 if __name__ == "__main__":
     app.run()

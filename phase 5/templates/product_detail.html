@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ product[1] }} Details</title>
     <link rel="stylesheet" href="static/mainstyle.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      function addToCart(product_id) {
+        $.ajax({
+          type: "GET",
+          url: "/cart/addtocart/" + product_id,
+          success: function (response) {
+            window.location.reload();
+            // Optionally, update the cart display or take further actions
+          },
+          error: function (error) {
+            // Handle error scenarios
+          },
+        });
+      }
+    </script>
 </head>
 
 
@@ -24,7 +40,7 @@
     {% for row in pics%}
         <img class="product_detail_image" src={{row[1]}} width="200" height="300">
     {% endfor %}
-    <h1 class="item_name">{{ product[0] }} <button class="add_to_cart">Add to cart</button></h1>
+    <h1 class="item_name">{{ product[0] }} <button class="add_to_cart" onclick="addToCart('{{ product[0] }}')">Add to cart</button></h1>
     <p class="sale-red-box-details">{% if product[4]!=0 %}{{product[4]}}% off{% endif %}</p>
     <p class="item_specs">Price: ${{ product[1] }}  {% if product[4]!=0 %}<s class="sale-crossed">{{product[5]}}</s>{% endif %}</p>
     {% if size%}
