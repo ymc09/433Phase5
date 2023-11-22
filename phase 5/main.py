@@ -1,7 +1,9 @@
-from flask import Flask, redirect,request, render_template
+from flask import Flask,request,redirect, render_template, flash, session
+from datetime import datetime
 import psycopg2
 import base64
 app = Flask(__name__) #create instance of flask
+app.secret_key = 'FOUR33'
 conn = psycopg2.connect(
    database="phase5", user='postgres', 
    password='vryl', host='127.0.0.1', port= '5432'
@@ -177,5 +179,66 @@ def remove_from_cart(product_name):
     return render_template("main.html",discounted_items=discounted_items,
                            best_sellers=best_sellers,
                            search_results_cloth=search_results_cloth,search_results_cos=search_results_cos,search=search,cosmetics_ad=cosmetics_ad)
+
+
+def user_exists(email):
+    cursor = conn.cursor()
+    query = 'SELECT * FROM "Customer" WHERE "customer_email" = %s'
+    cursor.execute(query, (email,))
+    user = cursor.fetchone()
+    return user is not None
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        email = request.form['email']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        gender = request.form['gender']
+        address = request.form['address']
+        phone_number = request.form['phone_number']
+        date_of_birth = datetime.strptime(request.form['date_of_birth'], '%Y-%m-%d')
+        credit_card = request.form['credit_card']
+        password = request.form['password']
+
+        if user_exists(email):
+            flash('User already exists. Please log in.')
+            return redirect('/login')
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO "Customer" ("customer_email","FName","LName", "gender", "address", "phonenumber", "DOB", "credit card","password")
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)
+        """, (email, first_name, last_name, gender, address, phone_number, date_of_birth, credit_card,password))
+
+        conn.commit()
+
+        flash('Signup successful! Please login.')
+        return redirect('/login')
+
+    return render_template('signup.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        cursor = conn.cursor()
+        cursor.execute('SELECT "password" FROM "Customer" WHERE "customer_email" = %s', (email,))
+        conn.commit()
+        user = cursor.fetchone()
+        print(user)
+
+        if password in user:  
+            flash('Login successful!')
+            user_logged_in = True
+            session['user_logged_in'] = user_logged_in
+            session['user_id'] = email
+            return redirect("/")
+        else:
+            flash('Invalid email or password. Please try again.')
+
+    return render_template('login.html')
+
+
 if __name__ == "__main__":
     app.run()
