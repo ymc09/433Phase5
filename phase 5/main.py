@@ -1,10 +1,10 @@
-from flask import Flask,request, render_template
+from flask import Flask,request,redirect, render_template
 import psycopg2
 import base64
 app = Flask(__name__) #create instance of flask
 conn = psycopg2.connect(
-   database="FOUR3THREE", user='postgres', 
-   password='Ay0oy@EECE433', host='127.0.0.1', port= '5432'
+   database="phase5", user='postgres', 
+   password='vryl', host='127.0.0.1', port= '5432'
 )
 
 @app.route("/", methods=['POST','GET']) 
@@ -68,10 +68,57 @@ def main():
             search_results_cos[i].append(round(search_results_cos[i][1]/(1-search_results_cos[i][2]),2)) # adding original price
             search_results_cos[i][2]=search_results_cos[i][2]*100
         search=True
+        
     
     return render_template("main.html",discounted_items1=discounted_items[:len(discounted_items)//2],
                            discounted_items2=discounted_items[len(discounted_items)//2:],
                            best_sellers1=best_sellers[:len(best_sellers)//2],best_sellers2=best_sellers[len(best_sellers)//2:],
                            search_results_cloth=search_results_cloth,search_results_cos=search_results_cos,search=search)
+
+
+cart=[]
+# cart.append(([5,'ddd','L',3,1]))
+@app.route("/cart/addtocart", methods=['POST','GET']) 
+def addToCart(itemRefNo):
+    
+        cursor=conn.cursor()
+        query = "SELECT ca.clothing_name, ca.size, cn.clothing_price FROM \"Clothing/Accessory item\" ca JOIN \"Clothing/Accessory item name\" cn ON ca.clothing_name = cn.clothing_name WHERE ca.clothing_RefNb = %s;"
+        cursor.execute(query, (itemRefNo,))
+        row = cursor.fetchone()
+
+        if row:
+            item = [
+                 itemRefNo,
+                 row[0],
+                 row[1],
+                 row[2]
+            ]
+
+            if item in cart:
+                item[4] += 1
+            else:
+                item[4] = 1
+                cart.append(item)
+            
+
+            return redirect('/cart')
+
+# View cart
+@app.route('/cart')
+def view_cart():
+    total = sum(item[3] * item[4] for item in cart)
+    return render_template('cart.html',cart=cart ,total=total)
+
+# Remove item from cart
+@app.route('/cart/removefromcart/<int:product_id>',methods=['POST','GET'])
+def remove_from_cart(product_id):
+    for item in cart:
+        if item[0]==product_id:
+            cart.remove(item)
+            break
+
+    return render_template('cart.html')
+
+
 if __name__ == "__main__":
     app.run()
