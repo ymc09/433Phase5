@@ -65,3 +65,203 @@ header{
     background-color: #3498db; /* Background color on hover */
     color: #fff; /* Text color on hover */
   }
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(190, 230, 238);
+  }
+
+
+  .slider-container {
+    position: relative;
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+  }
+
+  .slider,.slider1 {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    margin-left: 500px;
+  }
+
+  .slide,.slide1 {
+    min-width: 300px; /* Adjust the width as needed */
+    box-sizing: border-box;
+    margin: 0 6px; /* Adjust the margin to create spacing between slides */
+  }
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  input[type="radio"]:checked + .slider-container .slider {
+    transform: translateX(-100%);
+  }
+
+ .prev {
+    cursor: pointer;
+    padding: 10px;
+    margin: 0 5px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-left: 470px;
+    margin-bottom: 30px;
+  }
+  .next{
+    cursor: pointer;
+    padding: 10px;
+    margin: 0 5px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+  }
+  .prev:hover {
+    background-color: #2980b9;
+  }
+  .next:hover{
+    background-color: #2980b9;
+  }
+
+  label {
+    cursor: pointer;
+    padding: 10px;
+    margin: 0 5px;
+    font-size: 16px;
+    color: #555;
+  }
+
+  label:hover {
+    color: #333;
+  }
+  .discounts{
+    text-align: center;
+  color: #ffffff; /* Set your desired text color */
+  font-size: 2em; /* Set your desired font size */
+  margin-top: 20px; /* Adjust the top margin as needed */
+  margin-bottom: 20px; /* Adjust the top margin as needed */
+  text-transform: uppercase; /* Convert text to uppercase */
+  letter-spacing: 2px; /* Adjust letter spacing as needed */
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1); /* Add a subtle text shadow */
+  }
+  .discounts-bg{
+    background-color: rgb(85, 166, 220);
+    padding: 3px;
+    margin-top: 0px;
+    margin-bottom: 25px;
+  }
+  .sale-crossed{
+    color: rgb(92, 92, 92);
+  }
+  .sale-red-box{
+    background-color: red;
+    display: inline;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    text-align: left;
+    color:white;
+  }
+  .productpic{
+    margin-right:0px;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-left: 40px;
+  }
+  
+  ul li {
+    display: inline-block;
+    margin-right: 10px; /* Adjust the spacing between ul elements */
+  }
+  .product_detail_image{
+    margin-left: 25px;
+    margin-top: 20px;
+  }
+  .size-list {
+    list-style: none;
+    
+    padding: 0;
+    display: flex;
+    gap: 10px;
+    vertical-align: middle;
+}
+.size-list li {
+  display: flex;
+    background-color: #3498db;
+    
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.available_sizes{
+  display: flex;
+  margin-left: 25px;
+  font-size: 25px;
+  color: black;
+  font-family: 'Playfair Display', serif; 
+  vertical-align: middle;
+}
+.item_name{
+  padding-top:10px;
+  color: #4351c9; /* Set your desired text color */
+  margin-left: 25px;
+  font-size: 2em; /* Set your desired font size */
+  margin-top: 20px; /* Adjust the top margin as needed */
+  margin-bottom: 20px; /* Adjust the top margin as needed */
+  text-transform: uppercase; /* Convert text to uppercase */
+  letter-spacing: 2px; /* Adjust letter spacing as needed */
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1); /* Add a subtle text shadow */
+  vertical-align: middle;
+  
+}
+.item_specs{
+  margin-left: 25px;
+  font-size: 25px;
+  color: black;
+  font-family: 'Playfair Display', serif; 
+
+}
+
+.add_to_cart {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 25px;
+  transition: background-color 0.3s ease;
+  
+  vertical-align: middle;
+}
+.add_to_cart:hover {
+  background-color: #2678ae;
+  
+}
+a {
+  color: #000000;
+  text-decoration: none; /* Remove underline */
+}
+.sale-red-box-details{
+  background-color: red;
+  display: inline;
+  margin-left: 25px;
+  margin-right: 2px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  text-align: left;
+  color:white;
+}
