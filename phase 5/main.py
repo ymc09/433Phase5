@@ -77,7 +77,9 @@ def main():
 
 
 cart=[]
-# cart.append(([5,'ddd','L',3,1]))
+cart.append(([5,'ddd','L',3,1]))
+cart.append(([5,'ddd','L',3,1]))
+cart.append(([5,'ddd','L',3,1]))
 @app.route("/cart/addtocart", methods=['POST','GET']) 
 def addToCart(itemRefNo):
     
@@ -91,14 +93,16 @@ def addToCart(itemRefNo):
                  itemRefNo,
                  row[0],
                  row[1],
-                 row[2]
+                 row[2],
+                 1
             ]
 
-            if item in cart:
-                item[4] += 1
-            else:
-                item[4] = 1
-                cart.append(item)
+            for item in cart:
+                if item[0]==itemRefNo:
+                    item[4]+=1
+                    return redirect('/cart')
+            
+            cart.append(item)
             
 
             return redirect('/cart')
