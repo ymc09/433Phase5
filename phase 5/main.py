@@ -4,7 +4,7 @@ import base64
 app = Flask(__name__) #create instance of flask
 conn = psycopg2.connect(
    database="FOUR3THREE", user='postgres', 
-   password='Ay0oy@EECE433', host='127.0.0.1', port= '5432'
+   password='-----', host='127.0.0.1', port= '5432'
 )
 @app.route('/<product_id>')
 def product(product_id):
