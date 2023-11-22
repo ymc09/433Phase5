@@ -85,8 +85,16 @@ def main():
             search_results_cos[i].append(round(search_results_cos[i][1]/(1-search_results_cos[i][2]),2)) # adding original price
             search_results_cos[i][2]=search_results_cos[i][2]*100
         search=True
+      ####################### cosmetics ads
+    cursor.execute('select distinct on ("cosmetic_name") "cosmetic_name","cosmetic_price","cosmetic_discount","cosmetic_description","cosmetic_photos","Cosmetic item"."cosmetic_RefNb" from "Cosmetic item","Photos Cosmetic" where "Cosmetic item"."cosmetic_RefNb"="Photos Cosmetic"."cosmetic_RefNb" limit 8')
+    cosmetics_ad=cursor.fetchall()
+    for i in range(len(cosmetics_ad)):
+        cosmetics_ad[i]=list(cosmetics_ad[i])
+        cosmetics_ad[i][1]=round(cosmetics_ad[i][1],2)
+        cosmetics_ad[i].append(round(cosmetics_ad[i][1]/(1-cosmetics_ad[i][2]),2))
+        cosmetics_ad[i][2]=cosmetics_ad[i][2]*100
     return render_template("main.html",discounted_items=discounted_items,
                            best_sellers=best_sellers,
-                           search_results_cloth=search_results_cloth,search_results_cos=search_results_cos,search=search)
+                           search_results_cloth=search_results_cloth,search_results_cos=search_results_cos,search=search,cosmetics_ad=cosmetics_ad)
 if __name__ == "__main__":
     app.run()
