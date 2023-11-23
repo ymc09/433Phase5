@@ -239,6 +239,70 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/profile',methods=['GET', 'POST'])
+def profile():
+    print("Entered /profile route")
+    cursor = conn.cursor()
+    user_email = session['user_id']
+    cursor.execute('SELECT * FROM "Customer" WHERE customer_email = %s', (user_email,))
+    user_data = cursor.fetchone()
+    if user_data:
+        user_info = {
+            'email': user_data[0],
+            'first_name': user_data[1],
+            'last_name': user_data[2],
+            'password' : user_data[3],
+            'gender': user_data[4],
+            'address': user_data[5],
+            'phonenumber': user_data[6],
+            'credit_card': user_data[7],
+            'date_of_birth': user_data[8],
+            }
+        query = """
+            SELECT *
+            FROM (
+                SELECT * FROM "Ordered By Clothing"
+                WHERE customer_email = %s
+                AND "status" = %s
+            ) 
+            ORDER BY date_of_placement
+        """
+        cursor.execute(query, (session['user_id'],'completed'))
+        clothing_orders = cursor.fetchall()
+        print(clothing_orders)
+        query = """
+            SELECT *
+            FROM (
+                SELECT * FROM "Ordered By Cosmetic"
+                WHERE customer_email = %s
+                AND "status" = %s
+            ) 
+            ORDER BY date_of_placement
+        """ 
+        cursor.execute(query, (session['user_id'],'completed'))
+        cosmetic_orders = cursor.fetchall()
+        print(cosmetic_orders)
+        clothing_order_details = {}
+        for order in clothing_orders:
+            date_of_placement = order[3] 
+            if date_of_placement not in clothing_order_details:
+                clothing_order_details[date_of_placement] = []
+
+            cursor.execute('SELECT "clothing_name", "size" FROM "Clothing/Accessory item" WHERE  "clothing_RefNb" = %s', (order[0],))
+            item_details = cursor.fetchone()
+            clothing_order_details[date_of_placement].append(item_details)
+
+        cosmetic_order_details = {}
+        for order in cosmetic_orders:
+            date_of_placement = order[3]  
+            if date_of_placement not in cosmetic_order_details:
+                cosmetic_order_details[date_of_placement] = []
+
+            cursor.execute('SELECT "cosmetic_name" FROM "Cosmetic item"  WHERE "cosmetic_RefNb" = %s', (order[0],))
+            item_details = cursor.fetchone()
+            cosmetic_order_details[date_of_placement].append(item_details)
+        return render_template('profile.html', user_info=user_info,clothing_order_details=clothing_order_details,cosmetic_order_details=cosmetic_order_details)
+
 
 if __name__ == "__main__":
     app.run()
