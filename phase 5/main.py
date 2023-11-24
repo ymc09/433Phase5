@@ -8,6 +8,8 @@ conn = psycopg2.connect(
    database="phase5", user='postgres', 
    password='vryl', host='127.0.0.1', port= '5432'
 )
+
+
 @app.route('/<product_name>')
 def product(product_name):
     cursor=conn.cursor()
