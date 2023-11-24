@@ -8,8 +8,8 @@ conn = psycopg2.connect(
    database="phase5", user='postgres', 
    password='vryl', host='127.0.0.1', port= '5432'
 )
-@app.route('/<product_name>')
-def product(product_name):
+@app.route('/<product_id>')
+def product(product_id):
     cursor=conn.cursor()
     # Find the product with the specified ID
     cursor.execute('(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb" from "Cosmetic item" where "cosmetic_name"='+"'"+product_id+"')")
@@ -28,6 +28,7 @@ def product(product_name):
         cursor.execute('select * from "Photos Cosmetic" where "cosmetic_RefNb"='+str(product[3]))
     pics=cursor.fetchall()
     return render_template('product_detail.html', product=product,pics=pics,size=size)
+
 
 
     
@@ -145,7 +146,7 @@ def addToCart(product_name):
                 ]
 
                 for item in cart:
-                    if item[1]==name:
+                    if item[1]==product_name:
                         item[4]+=1
                         return redirect('/cart')
                 
@@ -173,18 +174,6 @@ def remove_from_cart(product_name):
 
     return render_template('cart.html')
 
-
-      ####################### cosmetics ads
-    cursor.execute('select distinct on ("cosmetic_name") "cosmetic_name","cosmetic_price","cosmetic_discount","cosmetic_description","cosmetic_photos","Cosmetic item"."cosmetic_RefNb" from "Cosmetic item","Photos Cosmetic" where "Cosmetic item"."cosmetic_RefNb"="Photos Cosmetic"."cosmetic_RefNb" limit 8')
-    cosmetics_ad=cursor.fetchall()
-    for i in range(len(cosmetics_ad)):
-        cosmetics_ad[i]=list(cosmetics_ad[i])
-        cosmetics_ad[i][1]=round(cosmetics_ad[i][1],2)
-        cosmetics_ad[i].append(round(cosmetics_ad[i][1]/(1-cosmetics_ad[i][2]),2))
-        cosmetics_ad[i][2]=cosmetics_ad[i][2]*100
-    return render_template("main.html",discounted_items=discounted_items,
-                           best_sellers=best_sellers,
-                           search_results_cloth=search_results_cloth,search_results_cos=search_results_cos,search=search,cosmetics_ad=cosmetics_ad)
 
 
 def user_exists(email):

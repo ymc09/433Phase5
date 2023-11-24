@@ -8,15 +8,8 @@
     <header>
         
         <a href="/"><img src="static/logo.png" width=450 height="68"></a>
-        {% if session.get('user_logged_in') %}
-            <a href="/profile"><button class="profileButton">&#128100;</button></a>
-        {% else %}
-            <a href="/login"><button class="profileButton">Login</button></a>
-        {% endif %}
+        <a href="/profile"><button class="profileButton">&#128100;</button></a> 
         <a href="/cart"><button class="cartButton">&#128722;</button></a>
-        <form action="" method="POST">
-        
-
 
         <form action="" method="POST">
             
