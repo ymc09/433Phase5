@@ -80,13 +80,13 @@ header{
     overflow: hidden;
   }
 
-  .slider,.slider1 {
+  .slider,.slider1,.slider2 {
     display: flex;
     transition: transform 0.5s ease-in-out;
     margin-left: 500px;
   }
 
-  .slide,.slide1 {
+  .slide,.slide1,.slide2 {
     min-width: 300px; /* Adjust the width as needed */
     box-sizing: border-box;
     margin: 0 6px; /* Adjust the margin to create spacing between slides */
@@ -264,4 +264,10 @@ a {
   margin-bottom: 3px;
   text-align: left;
   color:white;
+}
+footer {
+  background-color:  rgb(85, 166, 220);
+  color: #fff;
+  padding: 10px;
+  text-align: center;
 }
