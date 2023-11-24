@@ -8,15 +8,13 @@ conn = psycopg2.connect(
    database="phase5", user='postgres', 
    password='vryl', host='127.0.0.1', port= '5432'
 )
-
-
 @app.route('/<product_name>')
 def product(product_name):
     cursor=conn.cursor()
-    # Find the product with the specified name
-    cursor.execute('(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb" from "Cosmetic item" where "cosmetic_name"='+"'"+product_name+"')")
+    # Find the product with the specified ID
+    cursor.execute('(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb" from "Cosmetic item" where "cosmetic_name"='+"'"+product_id+"')")
     cosmetics=cursor.fetchall()
-    cursor.execute('(select C1."clothing_name","clothing_price","clothing_description","clothing_RefNb","clothing_discount" from "Clothing/Accessory item" as C1, "Clothing/Accessory item name" as C2 where C1."clothing_name"=C2."clothing_name" and C1."clothing_name"='+"'"+product_name+"') union"+'(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb","cosmetic_discount" from "Cosmetic item" where "cosmetic_name"='+"'"+product_name+"')")
+    cursor.execute('(select C1."clothing_name","clothing_price","clothing_description","clothing_RefNb","clothing_discount" from "Clothing/Accessory item" as C1, "Clothing/Accessory item name" as C2 where C1."clothing_name"=C2."clothing_name" and C1."clothing_name"='+"'"+product_id+"') union"+'(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb","cosmetic_discount" from "Cosmetic item" where "cosmetic_name"='+"'"+product_id+"')")
     product = list(cursor.fetchall()[0])
     product[1]=round(product[1],2)
     size=[]
@@ -30,6 +28,7 @@ def product(product_name):
         cursor.execute('select * from "Photos Cosmetic" where "cosmetic_RefNb"='+str(product[3]))
     pics=cursor.fetchall()
     return render_template('product_detail.html', product=product,pics=pics,size=size)
+
 
     
 @app.route("/", methods=['POST','GET']) 
@@ -89,12 +88,17 @@ def main():
             search_results_cos[i].append(round(search_results_cos[i][1]/(1-search_results_cos[i][2]),2)) # adding original price
             search_results_cos[i][2]=search_results_cos[i][2]*100
         search=True
-        
-    
-    return render_template("main.html",discounted_items1=discounted_items[:len(discounted_items)//2],
-                           discounted_items2=discounted_items[len(discounted_items)//2:],
-                           best_sellers1=best_sellers[:len(best_sellers)//2],best_sellers2=best_sellers[len(best_sellers)//2:],
-                           search_results_cloth=search_results_cloth,search_results_cos=search_results_cos,search=search)
+    ####################### cosmetics ads
+    cursor.execute('select distinct on ("cosmetic_name") "cosmetic_name","cosmetic_price","cosmetic_discount","cosmetic_description","cosmetic_photos","Cosmetic item"."cosmetic_RefNb" from "Cosmetic item","Photos Cosmetic" where "Cosmetic item"."cosmetic_RefNb"="Photos Cosmetic"."cosmetic_RefNb" limit 8')
+    cosmetics_ad=cursor.fetchall()
+    for i in range(len(cosmetics_ad)):
+        cosmetics_ad[i]=list(cosmetics_ad[i])
+        cosmetics_ad[i][1]=round(cosmetics_ad[i][1],2)
+        cosmetics_ad[i].append(round(cosmetics_ad[i][1]/(1-cosmetics_ad[i][2]),2))
+        cosmetics_ad[i][2]=cosmetics_ad[i][2]*100
+    return render_template("main.html",discounted_items=discounted_items,
+                           best_sellers=best_sellers,
+                           search_results_cloth=search_results_cloth,search_results_cos=search_results_cos,search=search,cosmetics_ad=cosmetics_ad)
 
 
 cart=[]
