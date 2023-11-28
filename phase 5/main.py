@@ -8,26 +8,26 @@ conn = psycopg2.connect(
    database="phase5", user='postgres', 
    password='vryl', host='127.0.0.1', port= '5432'
 )
-@app.route('/<product_id>')
-def product(product_id):
-    cursor=conn.cursor()
-    # Find the product with the specified ID
-    cursor.execute('(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb" from "Cosmetic item" where "cosmetic_name"='+"'"+product_id+"')")
-    cosmetics=cursor.fetchall()
-    cursor.execute('(select C1."clothing_name","clothing_price","clothing_description","clothing_RefNb","clothing_discount" from "Clothing/Accessory item" as C1, "Clothing/Accessory item name" as C2 where C1."clothing_name"=C2."clothing_name" and C1."clothing_name"='+"'"+product_id+"') union"+'(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb","cosmetic_discount" from "Cosmetic item" where "cosmetic_name"='+"'"+product_id+"')")
-    product = list(cursor.fetchall()[0])
-    product[1]=round(product[1],2)
-    size=[]
-    product.append(round(product[1]/(1-product[4]),2)) # adding original price
-    product[4]=product[4]*100
-    if len(cosmetics)==0:
-        cursor.execute('select "size" from "Clothing/Accessory item" where "clothing_RefNb"='+"'"+str(product[3])+"'")
-        size=cursor.fetchall()
-        cursor.execute('(select * from "Photos Clothing" where "clothing_RefNb"='+str(product[3])+")")
-    else:
-        cursor.execute('select * from "Photos Cosmetic" where "cosmetic_RefNb"='+str(product[3]))
-    pics=cursor.fetchall()
-    return render_template('product_detail.html', product=product,pics=pics,size=size)
+# @app.route('/<product_id>')
+# def product(product_id):
+#     cursor=conn.cursor()
+#     # Find the product with the specified ID
+#     cursor.execute('(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb" from "Cosmetic item" where "cosmetic_name"='+"'"+product_id+"')")
+#     cosmetics=cursor.fetchall()
+#     cursor.execute('(select C1."clothing_name","clothing_price","clothing_description","clothing_RefNb","clothing_discount" from "Clothing/Accessory item" as C1, "Clothing/Accessory item name" as C2 where C1."clothing_name"=C2."clothing_name" and C1."clothing_name"='+"'"+product_id+"') union"+'(select "cosmetic_name","cosmetic_price","cosmetic_description","cosmetic_RefNb","cosmetic_discount" from "Cosmetic item" where "cosmetic_name"='+"'"+product_id+"')")
+#     product = list(cursor.fetchall()[0])
+#     product[1]=round(product[1],2)
+#     size=[]
+#     product.append(round(product[1]/(1-product[4]),2)) # adding original price
+#     product[4]=product[4]*100
+#     if len(cosmetics)==0:
+#         cursor.execute('select "size" from "Clothing/Accessory item" where "clothing_RefNb"='+"'"+str(product[3])+"'")
+#         size=cursor.fetchall()
+#         cursor.execute('(select * from "Photos Clothing" where "clothing_RefNb"='+str(product[3])+")")
+#     else:
+#         cursor.execute('select * from "Photos Cosmetic" where "cosmetic_RefNb"='+str(product[3]))
+#     pics=cursor.fetchall()
+#     return render_template('product_detail.html', product=product,pics=pics,size=size)
 
 
 
@@ -103,54 +103,52 @@ def main():
 
 
 cart=[]
-cart.append(([5,'ddd','L',3,1]))
-cart.append(([5,'ddd','L',3,1]))
-cart.append(([5,'ddd','L',3,1]))
+cart.append(([5,'ddd',3,1]))
+cart.append(([5,'ddd',3,1]))
+cart.append(([5,'ddd',3,1]))
 @app.route("/cart/addtocart/<product_name>", methods=['POST','GET']) 
 def addToCart(product_name):
     
         cursor=conn.cursor()
-        query = "SELECT ca.clothing_RefNb ,ca.clothing_name, ca.size, cn.clothing_price FROM \"Clothing/Accessory item\" ca JOIN \"Clothing/Accessory item name\" cn ON ca.clothing_name = cn.clothing_name WHERE ca.clothing_name = %s;"
+        query = "SELECT ca.\"clothing_RefNb\" ,ca.clothing_name, cn.clothing_price FROM \"Clothing/Accessory item\" ca JOIN \"Clothing/Accessory item name\" cn ON ca.clothing_name = cn.clothing_name WHERE ca.clothing_name = %s;"
         cursor.execute(query, (product_name,))
         row = cursor.fetchone()
 
         if row:
-            item = [
+            newitem = [
                  row[0],
                  row[1],
-                 row[2],
-                 row[3],
+                 round(row[2]),
                  1
             ]
 
             for item in cart:
                 if item[1]==product_name:
-                    item[4]+=1
+                    item[3]+=1
                     return redirect('/cart')
             
-            cart.append(item)
+            cart.append(newitem)
             
         else:
 
-            query = "SELECT cosmetic_RefNb ,cosmetic_name,size,cosmetic_price FROM \"Cosmetic item\" where cosmetic_name = %s;"
+            query = "SELECT \"cosmetic_RefNb\" ,cosmetic_name,cosmetic_price FROM \"Cosmetic item\" where cosmetic_name = %s;"
             cursor.execute(query, (product_name,))
             row = cursor.fetchone()
 
             if row:
-                item = [
+                newitem = [
                     row[0],
                     row[1],
-                    row[2],
-                    row[3],
+                    round(row[2]),
                     1
                 ]
 
                 for item in cart:
                     if item[1]==product_name:
-                        item[4]+=1
+                        item[3]+=1
                         return redirect('/cart')
                 
-                cart.append(item)
+                cart.append(newitem)
 
             else:
                 print("Product Not Found!")
@@ -161,7 +159,8 @@ def addToCart(product_name):
 # View cart
 @app.route('/cart')
 def view_cart():
-    total = sum(item[3] * item[4] for item in cart)
+    total = sum(int(item[2]) * int(item[3]) for item in cart)
+    total=round(total)
     return render_template('cart.html',cart=cart ,total=total)
 
 # Remove item from cart
