@@ -212,54 +212,49 @@ def main():
 
 
 cart=[]
-cart.append(([5,'ddd','L',3,1]))
-cart.append(([5,'ddd','L',3,1]))
-cart.append(([5,'ddd','L',3,1]))
 @app.route("/cart/addtocart/<product_name>", methods=['POST','GET']) 
-def addToCar(product_name):
+def addToCart(product_name):
     
         cursor=conn.cursor()
-        query = "SELECT ca.clothing_RefNb ,ca.clothing_name, ca.size, cn.clothing_price FROM \"Clothing/Accessory item\" ca JOIN \"Clothing/Accessory item name\" cn ON ca.clothing_name = cn.clothing_name WHERE ca.clothing_name = %s;"
+        query = "SELECT ca.\"clothing_RefNb\" ,ca.clothing_name, cn.clothing_price FROM \"Clothing/Accessory item\" ca JOIN \"Clothing/Accessory item name\" cn ON ca.clothing_name = cn.clothing_name WHERE ca.clothing_name = %s;"
         cursor.execute(query, (product_name,))
         row = cursor.fetchone()
 
         if row:
-            item = [
+            newitem = [
                  row[0],
                  row[1],
-                 row[2],
-                 row[3],
+                 round(row[2]),
                  1
             ]
 
             for item in cart:
                 if item[1]==product_name:
-                    item[4]+=1
+                    item[3]+=1
                     return redirect('/cart')
             
-            cart.append(item)
+            cart.append(newitem)
             
         else:
 
-            query = "SELECT cosmetic_RefNb ,cosmetic_name,size,cosmetic_price FROM \"Cosmetic item\" where cosmetic_name = %s;"
+            query = "SELECT \"cosmetic_RefNb\" ,cosmetic_name,cosmetic_price FROM \"Cosmetic item\" where cosmetic_name = %s;"
             cursor.execute(query, (product_name,))
             row = cursor.fetchone()
 
             if row:
-                item = [
+                newitem = [
                     row[0],
                     row[1],
-                    row[2],
-                    row[3],
+                    round(row[2]),
                     1
                 ]
 
                 for item in cart:
                     if item[1]==product_name:
-                        item[4]+=1
+                        item[3]+=1
                         return redirect('/cart')
                 
-                cart.append(item)
+                cart.append(newitem)
 
             else:
                 print("Product Not Found!")
@@ -270,7 +265,8 @@ def addToCar(product_name):
 # View cart
 @app.route('/cart')
 def view_cart():
-    total = sum(item[3] * item[4] for item in cart)
+    total = sum(int(item[2]) * int(item[3]) for item in cart)
+    total=round(total)
     return render_template('cart.html',cart=cart ,total=total)
 
 # Remove item from cart
@@ -282,6 +278,7 @@ def remove_from_cart(product_name):
             break
 
     return render_template('cart.html')
+
 
 
 
