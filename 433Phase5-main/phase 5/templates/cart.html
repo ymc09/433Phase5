@@ -27,7 +27,6 @@
       <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Size</th>
         <th>Price</th>
         <th>Quantity</th>
       </tr>
@@ -35,9 +34,8 @@
       <tr>
         <td>{{ item[0]}}</td>
         <td>{{ item[1] }}</td>
-        <td>${{ item[2] }}</td>
+        <td>{{ item[2] }}</td>
         <td>{{ item[3] }}</td>
-        <td>{{ item[4] }}</td>
         <td>
           <button onclick="removefromCart('{{ item[1] }}')">
             Remove From Cart
@@ -49,3 +47,5 @@
     <p>Total: ${{ total }}</p>
   </body>
 </html>
+
+    
