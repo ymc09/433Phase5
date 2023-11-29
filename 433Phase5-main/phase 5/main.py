@@ -265,34 +265,8 @@ def addToCart(product_name):
 # View cart
 @app.route('/cart')
 def view_cart():
-    def checkout():
-        if (len(cart)!=0):
-            cursor= conn.cursor()
-            for item in cart:
-
-                q1="SELECT * from \"Clothing/Accessory item\"  where clothing_name = %s "
-                cursor.execute(q1,item[1])
-                row= cursor.fetchone()
-                if row:
-                    cursor.execute("""
-                    INSERT INTO "Ordered By Clothing" ("clothing_RefNb", "customer_email", "status", "date_of_placement", "payment_method")
-                    VALUES (%s, %s, %s, %s, %s)
-                """, (item[0], session['user_id'], 'completed', datetime.now(), 'cash'))
-                    
-                    
-                else:
-                    cursor.execute("""
-                    INSERT INTO "Ordered By Cosmetic" ("cosmetic_RefNb", "customer_email", "status", "date_of_placement", "payment_method")
-                    VALUES (%s, %s, %s, %s, %s)
-                """, (item[0], session['user_id'], 'completed', datetime.now(), 'cash'))
-
-                conn.commit()
-                cart.clear() 
-
-            
-    total = sum(int(item[2]) * int(item[3]) for item in cart)
-    total=round(total)
-    return render_template('cart.html',cart=cart ,total=total,checkout=checkout)
+    total = sum(item[3] * item[4] for item in cart)
+    return render_template('cart.html',cart=cart ,total=total)
 
 # Remove item from cart
 @app.route('/cart/removefromcart/<product_name>',methods=['POST','GET'])
