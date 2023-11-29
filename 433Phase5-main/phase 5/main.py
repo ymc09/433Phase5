@@ -5,8 +5,8 @@ import base64
 app = Flask(__name__) #create instance of flask
 app.secret_key = 'FOUR33'
 conn = psycopg2.connect(
-   database="project 2", user='postgres', 
-   password='Newera.1', host='127.0.0.1', port= '5432'
+   database="phase5", user='postgres', 
+   password='vryl', host='127.0.0.1', port= '5432'
 )
 
 
@@ -265,9 +265,34 @@ def addToCart(product_name):
 # View cart
 @app.route('/cart')
 def view_cart():
+    def checkout():
+        if (len(cart)!=0):
+            cursor= conn.cursor()
+            for item in cart:
+
+                q1="SELECT * from \"Clothing/Accessory item\"  where clothing_name = %s "
+                cursor.execute(q1,item[1])
+                row= cursor.fetchone()
+                if row:
+                    cursor.execute("""
+                    INSERT INTO "Ordered By Clothing" ("clothing_RefNb", "customer_email", "status", "date_of_placement", "payment_method")
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (item[0], session['user_id'], 'completed', datetime.now(), 'cash'))
+                    
+                    
+                else:
+                    cursor.execute("""
+                    INSERT INTO "Ordered By Cosmetic" ("cosmetic_RefNb", "customer_email", "status", "date_of_placement", "payment_method")
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (item[0], session['user_id'], 'completed', datetime.now(), 'cash'))
+
+                conn.commit()
+                cart.clear() 
+
+            
     total = sum(int(item[2]) * int(item[3]) for item in cart)
     total=round(total)
-    return render_template('cart.html',cart=cart ,total=total)
+    return render_template('cart.html',cart=cart ,total=total,checkout=checkout)
 
 # Remove item from cart
 @app.route('/cart/removefromcart/<product_name>',methods=['POST','GET'])

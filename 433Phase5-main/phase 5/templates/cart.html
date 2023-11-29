@@ -19,7 +19,36 @@
           },
         });
       }
+
+      function checkoutButton() {
+        
+            {{
+              checkout()
+            }}
+      
+      }
     </script>
+    <header>
+      <a href="/"><img src="static/logo.png" width="450" height="68" /></a>
+      {% if session.get('user_logged_in') %}
+      <a href="/profile"><button class="profileButton">&#128100;</button></a>
+      {% else %}
+      <a href="/login"><button class="profileButton">Login</button></a>
+      {% endif %}
+      <a href="/cart"><button class="cartButton">&#128722;</button></a>
+
+      <form action="" method="POST">
+        <input type="text" name="search_bar" placeholder="Search" /><br />
+
+        <input type="submit" value="🔍︎" />
+      </form>
+      <div class="topnav">
+        <a href="/gp">Coats</a>
+        <a href="/patients">Jackets</a>
+        <a href="/pharmacy">Blazers</a>
+      </div>
+      {% if not search%} {% endif %}
+    </header>
   </head>
   <body>
     <h1>Cart</h1>
@@ -47,5 +76,10 @@
       {% endfor %}
     </table>
     <p>Total: ${{ total }}</p>
+    {% if session.get('user_logged_in') %}
+    <button id="checkout" onclick="checkoutButton">Checkout</button>
+    {% else %}
+    <a href="/login"><button id="checkout">Checkout</button></a>
+    {% endif %}
   </body>
 </html>
