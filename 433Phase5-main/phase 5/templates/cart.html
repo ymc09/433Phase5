@@ -72,7 +72,7 @@
         <td>{{ item[2] }}</td>
         <td>{{ item[3] }}</td>
         <td>
-          <button onclick="removefromCart('{{ item[1] }}')">
+          <button id="removebutton" onclick="removefromCart('{{ item[1] }}')">
             Remove From Cart
           </button>
         </td>
@@ -87,3 +87,4 @@
     {% endif %}
   </body>
 </html>
+
