@@ -20,12 +20,18 @@
         });
       }
 
-      function checkoutButton() {
-        
-            {{
-              checkout()
-            }}
-      
+      function checkout() {
+        $.ajax({
+          type: "GET",
+          url: "/cart/checkout",
+          success: function (response) {
+            window.location.reload();
+            // Optionally, update the cart display or take further actions
+          },
+          error: function (error) {
+            // Handle error scenarios
+          },
+        });
       }
     </script>
     <header>
@@ -75,11 +81,9 @@
     </table>
     <p>Total: ${{ total }}</p>
     {% if session.get('user_logged_in') %}
-    <button id="checkout" onclick="checkoutButton">Checkout</button>
+    <button id="checkout" onclick="checkout()">Checkout</button>
     {% else %}
     <a href="/login"><button id="checkout">Checkout</button></a>
     {% endif %}
   </body>
 </html>
-
-    
