@@ -5,7 +5,7 @@ import base64
 app = Flask(__name__) #create instance of flask
 app.secret_key = 'FOUR33'
 conn = psycopg2.connect(
-   database="phase5", user='postgres', 
+   database="four3three", user='postgres', 
    password='vryl', host='127.0.0.1', port= '5432'
 )
 
