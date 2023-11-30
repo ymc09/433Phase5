@@ -6,7 +6,7 @@ The 433 Store is an online shopping website developed using Flask and PostgreSQL
 
 - [Usage](#usage)
 - [Signup/Login](#Signup/Login)
-- [Home Page](#Home Page)
+- [HomePage](#HomePage)
 - [cart](#cart)
 - [profile](#profile)
 
@@ -24,7 +24,7 @@ The 433 Store is an online shopping website developed using Flask and PostgreSQL
 4. To signup you need to fill the information accordingly having a requiring to fill atleast the email,date of birth, and password.(Email has to include an @ and . to make it a valid email)
 5. After successfully signing up the website redirects you to the login page and you are now able to login to our website.
 
-## Home Page
+## HomePage
 
 1. To navigate the home page you could type in the text box of the search box whatever item you may be looking for and after pressing enter of the search button it then displays the items it found corresponding to what you searched.
 2. To go back to the main page you could simply click on our FOUR3THREE logo and it takes you back to the home page.
