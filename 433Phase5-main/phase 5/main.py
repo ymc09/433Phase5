@@ -316,29 +316,41 @@ def user_exists(email):
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        email = request.form['email']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        gender = request.form['gender']
-        address = request.form['address']
-        phone_number = request.form['phone_number']
-        date_of_birth = datetime.strptime(request.form['date_of_birth'], '%Y-%m-%d')
-        credit_card = request.form['credit_card']
-        password = request.form['password']
+        try:
+            email = request.form['email']
+            first_name = request.form['first_name']
+            last_name = request.form['last_name']
+            gender = request.form['gender']
+            address = request.form['address']
+            phone_number = request.form['phone_number']
+            date_of_birth = datetime.strptime(request.form['date_of_birth'], '%Y-%m-%d')
+            credit_card = request.form['credit_card']
+            password = request.form['password']
 
-        if user_exists(email):
-            flash('User already exists. Please log in.')
+            if not email or '@' not in email or '.' not in email:
+                flash('Invalid email address. Please enter a valid email.')
+                return redirect('/signup')
+
+
+            if user_exists(email):
+                flash('User already exists. Please log in.')
+                return redirect('/login')
+
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO "Customer" ("customer_email","FName","LName", "gender", "address", "phonenumber", "DOB", "credit card","password")
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (email, first_name, last_name, gender, address, phone_number, date_of_birth, credit_card, password))
+
+            conn.commit()
+
+            flash('Signup successful! Please log in.')
             return redirect('/login')
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO "Customer" ("customer_email","FName","LName", "gender", "address", "phonenumber", "DOB", "credit card","password")
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)
-        """, (email, first_name, last_name, gender, address, phone_number, date_of_birth, credit_card,password))
 
-        conn.commit()
-
-        flash('Signup successful! Please login.')
-        return redirect('/login')
+        except Exception as e:
+            print(f"Error during signup: {e}")
+            flash('An error occurred during signup. Please try again.')
+            return redirect('/signup')
 
     return render_template('signup.html')
 

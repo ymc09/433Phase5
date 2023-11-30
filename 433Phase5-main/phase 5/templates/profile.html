@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>User Profile</title>
-    <!-- Add your CSS or stylesheets here -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FOUR3THREE{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="static/prof.css">
 </head>
+<header>
+    <a href="/"><img src="static/logo.png" width=450 height="68"></a>
 <body>
     <h1>User Profile</h1>
     <p>Email: {{ user_info['email'] }}</p>
@@ -57,9 +61,7 @@
             </ul>
         {% endfor %}
     {% else %}
-    <p>No cosmetic orders found.</p>
+        <p>No cosmetic orders found.</p>
     {% endif %}
-
-    <a href="/">Home</a>
 </body>
 </html>
